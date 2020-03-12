@@ -17,7 +17,7 @@ require 'artii'
 require 'colorize'
 require 'colorized_string'
 require 'tty-prompt'
-require_relative 'slack'
+require_relative 'Slack'
 
 prompt = TTY::Prompt.new
 
@@ -48,12 +48,13 @@ puts $art.asciify("Slacker").colorize(:green)
 line
 
 # Check internet connection available
-# def online
-#   require_relative 'LocalServer'
-#   check = LocalServer.get 'https://google.com'
-# end
+def online
+  require_relative 'LocalServer'
+  check = LocalServer.new 
+  check.get 'https://google.com'
+end
 
-# online
+online
 
 # Prompt user to sign in.
 if prompt.yes?("Do you want to login to Slack?")
