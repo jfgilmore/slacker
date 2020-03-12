@@ -9,17 +9,16 @@ require 'securerandom'
   secure = []
   File.foreach(File.expand_path('config/.slacker', __dir__)) { |line| keys[x] = line.chomp; x += 1 }
 
-  unless File.exist? '~/.slacker_keys'
+  if File.exist? '/.slacker_keys'
     x = 0
     secure = []
 
-    File.foreach('~/.slacker_keys') { |line| secure[x] = line.chomp; x += 1 }
+    File.foreach('/.slacker_keys') { |line| secure[x] = line.chomp; x += 1 }
     cipher = secure[0]
     secret_key = secure[1] 
     iv = secure[2]
     
     Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
-  else
     keys.map! { |key| decrypt key }
   end
 
@@ -44,7 +43,7 @@ secure[2] = iv
 
 Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
 
-File.write('~.slacker_keys', secure.join("\n"))
+File.write('/.slacker_keys', secure.join("\n"))
 
 keys.map! do |key|
 encrypt key
