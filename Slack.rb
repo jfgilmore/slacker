@@ -9,12 +9,12 @@ class Slack
   @@SLACK_URI = 'slack.com/'
   @@URL = @@URI_HEAD + @@SLACK_URI
   @@USER_SCOPE = true
-  @@SCOPE = 'channels:read,chat:write,users:read,users:read.email'
-  @@CLIENT_ID = #placeholder
-  @@CLIENT_SECRET = #placeholder
+  @@SCOPE = 'channels:read,channels:history,users:read,chat:write,'#users:read.email
+  @@CLIENT_ID = 
+  @@CLIENT_SECRET = 
   @@EXIT = {name: "Exit", value: false}
   @@CHANNELS = {name: "Channels", value: :ch}
-  @@PRIVATE_MSG = {name: "Private messages", value: :pm}
+  @@PRIVATE_MSG = {name: "Private messages", value: :pm, disabled: '(coming soon...)'}
 
   def initialize
     @user = Authenticator.new @@URL, @@LOCAL_HOST, @@CLIENT_ID, @@CLIENT_SECRET, @@SCOPE, @@USER_SCOPE
@@ -70,6 +70,30 @@ class Slack
         @channels << {name: "#" + chan["name"], value: chan["id"]}
       end
       @channels << @@PRIVATE_MSG
+      @channels << @@EXIT
+    end
+    @channels
+  end
+
+  def history
+    response = @user.get("#{@@URL}api/conversations.history?channel=#{@channel}&limit=5")
+    response = @user.get(payload)
+    response = JSON.parse response
+    response["messages"].each do |chan|
+      history << {id: chan["user"], text: chan["id"], :time chan["ts"]}
+    end
+  end
+
+  def personal_messages
+    if @channels == []
+      response = ''
+      payload = ("#{@@URL}api/conversations.open")
+      response = @user.get(payload)
+      response = JSON.parse response
+      response["channels"].each do |chan|
+        @channels << {name: "#" + chan["name"], value: chan["id"]}
+      end
+      @channels << @@CHANNELS
       @channels << @@EXIT
     end
     @channels
