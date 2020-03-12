@@ -22,11 +22,13 @@ class LocalServer
 
   def get url
     response = HTTParty.get(url)
+    puts "Please check your internet connection" unless response.code == 200
     response.body
   end  
 
   def post url
     response = HTTParty.post(url)
+    puts "Please check your internet connection" unless response.code == 200
     response.body
   end  
 

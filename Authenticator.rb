@@ -6,6 +6,8 @@ class Authenticator
   require 'json'
   require 'httparty'
 
+  attr_reader :team, :team_name, :user_id
+
   def initialize(url, redirect_uri, client_id, client_secret, scope, user_scope)
     # scope left as general
     @url = url
@@ -62,18 +64,6 @@ class Authenticator
     payload = url + "&token=#{@token}"
     @server.post(payload)
   end
-
-  def user_id
-    @user_id
-  end
-
-  def team
-    @team
-  end
-  
-  def team_name
-    @team_name
-  end 
 
   private
   # Builds the client OAuth2 request to send to slack, request opens in browser

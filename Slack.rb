@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Slack
-  require_relative 'Authenticator'
+  require_relative 'authenticator'
   require 'httparty'
   attr_reader :conversation, :conversation_name, :channels, :users
 

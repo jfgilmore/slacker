@@ -17,7 +17,7 @@ require 'artii'
 require 'colorize'
 require 'colorized_string'
 require 'tty-prompt'
-require_relative 'Slack'
+require_relative 'slack'
 
 prompt = TTY::Prompt.new
 
@@ -47,10 +47,18 @@ line
 puts $art.asciify("Slacker").colorize(:green)
 line
 
-# if prompt.yes?("Hi#{session.name != '' ? " #{session.name}! Do you want to sign in with a different account?" : "! Do you want to authorise slacker?"}")
+# Check internet connection available
+# def online
+#   require_relative 'LocalServer'
+#   check = LocalServer.get 'https://google.com'
+# end
+
+# online
+
+# Prompt user to sign in.
 if prompt.yes?("Do you want to login to Slack?")
   slack = Slack.new
-puts "Login error" unless slack.login
+puts "Login error, please try again" unless slack.login
 else
   close
 end
@@ -82,7 +90,7 @@ while true
     print "#{slack.conversation_name}:"
     msg = get_text
     chat = slack.message msg
-    p chat
+    "Message undelivered: check your internet connection" unless chat == true
   end
   slack.conversation = previous
 end
