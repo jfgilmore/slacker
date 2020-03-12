@@ -19,6 +19,7 @@ require 'securerandom'
     iv = secure[2]
     
     Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
+  else
     keys.map! { |key| decrypt key }
   end
 
