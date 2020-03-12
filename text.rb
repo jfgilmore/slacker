@@ -20,6 +20,8 @@ require 'securerandom'
     
     Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
     keys.map! { |key| decrypt key }
+  else
+    File.new('/.slacker_keys', 'w')
   end
 
 
