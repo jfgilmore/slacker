@@ -1,22 +1,34 @@
 class LocalServer
   require 'socket'
+  require 'httparty'
 
-  # Spin up server on request
   def initialize
-    @server  = TCPServer.open('localhost', 3000)
-    @response = ''
+
   end
 
   # Get response then close session
+  # Spin up server on request
   def response
+    @server  = TCPServer.open('localhost', 3000)
+    @response = ''
     loop {
       client = @server.accept
-      self.page(client)
       @response = client.gets
+      self.page(client)
       client.close
       return @response
     }
   end
+
+  def get url
+    response = HTTParty.get(url)
+    response.body
+  end  
+
+  def post url
+    response = HTTParty.post(url)
+    response.body
+  end  
 
   # Print html response to browser
   def page client

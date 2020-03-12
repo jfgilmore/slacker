@@ -1,15 +1,21 @@
 #!/Users/joshuagilmore/.rbenv/shims/ruby
-
 `clear`
 
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default)
-`bundle install`    # Install any missing gems
+
+# On first run generate config files and run bundle install
+    unless File.exist? File.expand_path('config', __dir__)
+      p 'generating config files...'
+      `mkdir #{File.expand_path('config', __dir__)}`
+      `chmod -R 0400 config`
+      `bundle install`    # Install any missing gems
+    end
+
 require 'artii'
 require 'colorize'
 require 'colorized_string'
-require 'pony'
 require 'tty-prompt'
 require_relative 'Slack'
 
@@ -41,15 +47,36 @@ line
 puts $art.asciify("Slacker").colorize(:green)
 line
 
-session = Slack.new
 # if prompt.yes?("Hi#{session.name != '' ? " #{session.name}! Do you want to sign in with a different account?" : "! Do you want to authorise slacker?"}")
-if prompt.yes?("Hi! Do you want to re-authorise slacker?")
-  session = Slack.new false
-  session.login
+if prompt.yes?("Do you want to login to Slack?")
+  slack = Slack.new
+puts "Login error" unless slack.login
 else
   close
 end
 
-  session.active_chat = prompt(session.conversations) unless session.active_chat
+while true
+  previous = ''
+  case slack.channel
+  when :ch || ''
+    close unless slack.channel = prompt.select("Select a channel:", slack.conversations)
+    previous = :ch
+  when :pm
+    close unless slack.channel = prompt.select("Select a private message thread:", slack.personal_messages)
+    previous = :pm
+  else
+  end
+  
+  # Begin a chat session
+  puts "Leave message blank to change conversation"
+  chat = true
+  while chat == true
+    print "#{slack.channel_name}:"
+    msg = gets.chomp
+    chat = slack.message msg
+  end
+  slack.channel = previous
+end
 
-  session.message = prompt(session.conversations)
+close
+  # session.message = prompt(session.conversations)

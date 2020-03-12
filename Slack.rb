@@ -1,5 +1,6 @@
 class Slack
   require_relative 'Authenticator'
+  require 'httparty'
   
   attr_accessor :active_chat, :message
   
@@ -9,94 +10,88 @@ class Slack
   @@URL = @@URI_HEAD + @@SLACK_URI
   @@USER_SCOPE = true
   @@SCOPE = 'channels:read,chat:write,users:read,users:read.email'
-  @@CLIENT_ID = '930069515525.977879044658'
+  @@CLIENT_ID = #placeholder
+  @@CLIENT_SECRET = #placeholder
+  @@EXIT = {name: "Exit", value: false}
+  @@CHANNELS = {name: "Channels", value: :ch}
+  @@PRIVATE_MSG = {name: "Private messages", value: :pm}
 
-  def initialize token=false
-    @user = Authenticator.new @@URL, @@LOCAL_HOST, @@CLIENT_ID, @@SCOPE, @@USER_SCOPE
-    @active_chat = ''
-    # @name = @user.name
+  def initialize
+    @user = Authenticator.new @@URL, @@LOCAL_HOST, @@CLIENT_ID, @@CLIENT_SECRET, @@SCOPE, @@USER_SCOPE
+    @channel = :ch
+    @channel_name = ''
+    @channels = []
     @message = ''
-    @team = 'ca-m0120/'
     # @state = Change to random code to be passed back by slack to authenticate response, later revision to increase security
     self
   end
 
-  # def name
-  #   @name
-  # end
-
   def login
-    @user.client.token
-    self
+    if @user_id
+    p "0"
+      @user.new_session
+    else
+    p "1"
+      @user.authenticate.new_session
+    end
+    p "2"
+    @user_id = @user.user_id
+    @team = @user.team
+    @team_name = @user.team_name
+    return self
   end
 
-  def message msg
-    HTTParty.POST("#{@@URI_HEAD + @team + @@SLACK_URI}api/chat.postMessage?token=xoxp-#{@user.send()}&as_user=true&channel=#{@active_chat}&text=#{msg}")
-  end
-
-  def active_chat
-    @active_chat
-  end
-
-  def active_chat=(id)
-    @active_chat = id
-  end
-  
-  def contact_list
-
+  def message text
+    if text == ''
+      false
+    else
+      # json = { "channel": @channel,
+      #             "text": text
+      #           }
+      payload = ("#{@@URL}api/chat.postMessage?channel=#{@channel}&text=#{text}")
+      response = @user.post(payload)
+      response = JSON.parse response
+      p response
+      true
+      # POST /api/chat.postMessage
+      # Content-type: application/json
+      # Authorization: Bearer xoxp-xxxxxxxxx-xxxx
+      # {"channel":"C061EG9SL","text":"I hope the tour went well, Mr. Wonka.","attachments":[{"text":"Who wins the lifetime supply of chocolate?","fallback":"You could be telling the computer exactly what it can do with a lifetime supply of chocolate.","color":"#3AA3E3","attachment_type":"default","callback_id":"select_simple_1234","actions":[{"name":"winners_list","text":"Who should win?","type":"select","data_source":"users"}]}]}
+    end
   end
 
   def conversations
-    p response = @user.send( @@URI_HEAD + @team + @@SLACK_URI + "/conversations.list?" )
-
-    response = CGI.parse response
-
-    p response
-    # GET
-    # conversations.list
-
-    # Expected response
-    # application/x-www-form-urlencoded
-
-    # channels.info
-    
-
-    # @chat_id = response.
+    if @channels == []
+      response = ''
+      payload = ("#{@@URL}api/conversations.list?")
+      response = @user.get(payload)
+      response = JSON.parse response
+      response["channels"].each do |chan|
+        @channels << {name: "#" + chan["name"], value: chan["id"]}
+      end
+      @channels << @@PRIVATE_MSG
+      @channels << @@EXIT
+    end
+    @channels
   end
 
-  def send
-    # POST /api/chat.postMessage
-    # Content-type: application/json
-    # Authorization: Bearer xoxp-xxxxxxxxx-xxxx
-    # {"channel":"C061EG9SL","text":"I hope the tour went well, Mr. Wonka.","attachments":[{"text":"Who wins the lifetime supply of chocolate?","fallback":"You could be telling the computer exactly what it can do with a lifetime supply of chocolate.","color":"#3AA3E3","attachment_type":"default","callback_id":"select_simple_1234","actions":[{"name":"winners_list","text":"Who should win?","type":"select","data_source":"users"}]}]}
-
-
-    # Format json
-    # text: "USER TEXT HERE"
-    # mrkdwn: true/false (fr markdown formatting)
-
+  def channel
+      @channel
   end
 
-  def delete
-    # https://slack.com/api/chat.delete
-    # POST  
-
-  # POST /api/conversations.create
-  # Content-type: application/json
-  # Authorization: Bearer xoxp-xxxxxxxxx-xxxx
-  # {"name":"something-urgent"}
-
-
-
-    # https://app.slack.com/client/TTC21F5FF/
+  def channel_name
+    @channel_name
   end
 
-  def create_contact_file
-
+  def channel=(id)
+    @channels.each do |chan|
+      if id == chan[:value]
+        @channel_name = chan[:name]
+        @channel = chan[:value]
+      else
+        @channel = id
+      end
+    end
+    self
   end
-
-  # Slack user token string: "xoxp-"
-  # Workspace access tokens: "xoxa-2" refresh "xoxr"
 end
-
-# session = Slack.new
