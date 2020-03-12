@@ -78,12 +78,10 @@ class Authenticator
   private
   # Builds the client OAuth2 request to send to slack, request opens in browser
   def client
-    @client = "#{@url}oauth/v2/authorize?#{@scope}&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}"
-    @client
+    "#{@url}oauth/v2/authorize?#{@scope}&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}"
   end
 
   def token_client
-    @token_client = ("#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}")
-    @token_client
+    ("#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}")
   end
 end

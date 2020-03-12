@@ -72,14 +72,15 @@ while true
     end
   end
 
-# Get History, print
+  # Get History, print
+  # slack.history
 
   # Begin a chat session
   puts "Leave message blank to change conversation"
   chat = true
   while chat
     print "#{slack.conversation_name}:"
-    msg = gets.chomp
+    msg = get_text
     chat = slack.message msg
     p chat
   end

@@ -10,9 +10,9 @@ class Slack
   @@SLACK_URI = 'slack.com/'
   @@URL = @@URI_HEAD + @@SLACK_URI
   @@USER_SCOPE = true
-  @@SCOPE = 'channels:read,channels:history,users:read,chat:write,' # users:read.email
-  @@CLIENT_ID = '
-  @@CLIENT_SECRET = '
+  @@SCOPE = 'channels:read,channels:history,groups:history,im:history,mpim:history,users:read,chat:write,' # users:read.email
+  @@CLIENT_ID = 
+  @@CLIENT_SECRET = 
   @@EXIT = { name: '<Exit>', value: false }
   @@CHANNELS = { name: '#Channels', value: :ch }
   @@PRIVATE_MSG = { name: '-Private messages', value: :pm}
@@ -59,15 +59,20 @@ class Slack
       true
     end
   end
-
-  def history
-    payload = "#{@@URL}api/conversations.history?channel=#{@conversation}&limit=5"
-    response = @user.get(payload)
-    response = JSON.parse response
-    response['messages'].each do |chan|
-      history << { id: chan['user'], text: chan['id'], time: chan['ts'] }
-    end
-  end
+  
+  # Message history: to be added in later revision.
+  # def history
+  #   now = Time.now
+  #   time = now - 864000000
+  #   p time.to_f
+  #   payload = "#{@@URL}api/conversations.history?channel=#{@conversation}&limit=5&inclusive=true&oldest=#{time}"
+  #   response = @user.get(payload)
+  #   response = JSON.parse response
+  #   p response
+  #   response['messages'].each do |chan|
+  #     history << { id: chan['user'], text: chan['id'], time: chan['ts'] }
+  #   end
+  # end
 
   def load_channels
     @channels = []
