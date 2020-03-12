@@ -55,27 +55,35 @@ else
   close
 end
 
+previous = ''
 while true
-  previous = ''
-  case slack.channel
-  when :ch || ''
-    close unless slack.channel = prompt.select("Select a channel:", slack.conversations)
-    previous = :ch
-  when :pm
-    close unless slack.channel = prompt.select("Select a private message thread:", slack.personal_messages)
-    previous = :pm
-  else
+  while slack.conversation == :pm || :ch || false
+    case slack.conversation
+    when :ch || ''
+      close unless slack.conversation = prompt.select("Select a channel:", slack.channels)
+      previous = :ch
+    when :pm
+      close unless slack.conversation = prompt.select("Select a private message thread:", slack.users)
+      previous = :pm
+    when false
+      close
+    else
+      break
+    end
   end
-  
+
+# Get History, print
+
   # Begin a chat session
   puts "Leave message blank to change conversation"
   chat = true
-  while chat == true
-    print "#{slack.channel_name}:"
+  while chat
+    print "#{slack.conversation_name}:"
     msg = gets.chomp
     chat = slack.message msg
+    p chat
   end
-  slack.channel = previous
+  slack.conversation = previous
 end
 
 close
