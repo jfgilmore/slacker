@@ -5,6 +5,8 @@ class Authenticator
   require 'cgi'
   require 'json'
   require 'httparty'
+  require 'encryptor'
+  require 'securerandom'
 
   attr_reader :team, :team_name, :user_id
 
