@@ -1,4 +1,9 @@
+# frozen_string_literal: true
 
+# Class definition for an authentication layer of the slacker app
+# This class retrieves secret keys and oauth codes and relays get
+# and post requests to the API adding the authorisation token as
+# they are passed.
 class Authenticator
   require_relative 'LocalServer'
   require 'launchy'
@@ -21,7 +26,7 @@ class Authenticator
     @scope = @user_scope + scope
     @redirect_uri = redirect_uri
     @server = LocalServer.new
-    
+
     @user_id = ''
     @team = ''
     @team_name = ''
@@ -37,7 +42,7 @@ class Authenticator
   # Needs error handling, returns encrypted user session key on success
   def authenticate
     if @code == ''
-      Launchy.open(self.client)
+      Launchy.open(client)
       getter = LocalServer.new
       @code = CGI.parse getter.response
       @code = @code['GET /oauth2/callback?code'][0]
@@ -47,33 +52,34 @@ class Authenticator
 
   def new_session
     if @token == ''
-      response = @server.post(self.token_client)
+      response = @server.post(token_client)
       response = JSON.parse response
-      @token = response["authed_user"]["access_token"]
-      @user_id = response["authed_user"]["id"]
-      @team = response["team"]["id"]
-      @team_name = response["team"]["name"]
+      @token = response['authed_user']['access_token']
+      @user_id = response['authed_user']['id']
+      @team = response['team']['id']
+      @team_name = response['team']['name']
     end
     self
   end
 
-  def get url
+  def get(url)
     payload = url + "&token=#{@token}"
     @server.get(payload)
   end
 
-  def post url
+  def post(url)
     payload = url + "&token=#{@token}"
     @server.post(payload)
   end
 
   private
+
   # Builds the client OAuth2 request to send to slack, request opens in browser
   def client
     "#{@url}oauth/v2/authorize?#{@scope}&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}"
   end
 
   def token_client
-    ("#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}")
+    "#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}"
   end
 end

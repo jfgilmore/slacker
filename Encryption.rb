@@ -32,8 +32,8 @@ class Encryption
     secret_key = SecureRandom.random_bytes(32) # Insures that the key is the correct length respective to the algorithm used.
     iv = SecureRandom.random_bytes(16) # Insures that the IV is the correct length respective to the algorithm used.
     secure = { cipher: cipher,
-              key: secret_key,
-              iv: iv }
+               key: secret_key,
+               iv: iv }
 
     Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
 
@@ -43,9 +43,8 @@ class Encryption
       p value
       keys[key] = encrypt value
 
-    File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
-  end
-
+      File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
+    end
   end
 
   def decrypt(encrypted_value)
@@ -55,5 +54,4 @@ class Encryption
   def encrypt(string)
     Encryptor.encrypt(value: string)
   end
-
 end

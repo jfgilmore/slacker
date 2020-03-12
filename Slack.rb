@@ -11,11 +11,11 @@ class Slack
   @@URL = @@URI_HEAD + @@SLACK_URI
   @@USER_SCOPE = true
   @@SCOPE = 'channels:read,channels:history,groups:history,im:history,mpim:history,users:read,chat:write,' # users:read.email
-  @@CLIENT_ID = 
-  @@CLIENT_SECRET = 
+  @@CLIENT_ID = '930069515525.977879044658'
+  @@CLIENT_SECRET = 'dc968f10464c7bb39bd9c72ad2c599bb'
   @@EXIT = { name: '<Exit>', value: false }
   @@CHANNELS = { name: '#Channels', value: :ch }
-  @@PRIVATE_MSG = { name: '-Private messages', value: :pm}
+  @@PRIVATE_MSG = { name: '-Private messages', value: :pm }
 
   def initialize
     @user = Authenticator.new @@URL, @@LOCAL_HOST, @@CLIENT_ID, @@CLIENT_SECRET, @@SCOPE, @@USER_SCOPE
@@ -38,8 +38,8 @@ class Slack
     @user_id = @user.user_id
     @team = @user.team
     @team_name = @user.team_name
-    @channels[0] = self.load_channels
-    @users[0] = self.load_users
+    @channels[0] = load_channels
+    @users[0] = load_users
     @channels.each do |hash|
       @conversations << hash
     end
@@ -59,7 +59,7 @@ class Slack
       true
     end
   end
-  
+
   # Message history: to be added in later revision.
   # def history
   #   now = Time.now
@@ -86,7 +86,6 @@ class Slack
     end
     @channels
   end
-
 
   def load_users
     @users = []

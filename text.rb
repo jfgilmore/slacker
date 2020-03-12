@@ -1,35 +1,36 @@
+# frozen_string_literal: true
+
 require 'encryptor'
 require 'securerandom'
-  
+
+x = 0
+keys = []
+cipher = ''
+secret_key = ''
+iv = ''
+secure = []
+File.foreach(File.expand_path('config/.slacker', __dir__)) { |line| keys[x] = line.chomp; x += 1 }
+
+if File.exist? '/Users/.slacker_keys'
   x = 0
-  keys = []
-  cipher = ''
-  secret_key = ''
-  iv = ''
   secure = []
-  File.foreach(File.expand_path('config/.slacker', __dir__)) { |line| keys[x] = line.chomp; x += 1 }
 
-  if File.exist? '/Users/.slacker_keys'
-    x = 0
-    secure = []
+  File.foreach('/Users/.slacker_keys') { |line| secure[x] = line.chomp; x += 1 }
+  cipher = secure[0]
+  secret_key = secure[1]
+  iv = secure[2]
 
-    File.foreach('/Users/.slacker_keys') { |line| secure[x] = line.chomp; x += 1 }
-    cipher = secure[0]
-    secret_key = secure[1] 
-    iv = secure[2]
-    
-    Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
-    keys.map! { |key| decrypt key }
-  else
-    File.new('/Users/.slacker_keys', 'w+')
-  end
+  Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
+  keys.map! { |key| decrypt key }
+else
+  File.new('/Users/.slacker_keys', 'w+')
+end
 
-
-def decrypt encrypted_value
+def decrypt(encrypted_value)
   Encryptor.decrypt(value: encrypted_value)
 end
 
-def encrypt string
+def encrypt(string)
   Encryptor.encrypt(value: string)
 end
 
@@ -48,7 +49,7 @@ Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: 
 File.write('/Users/.slacker_keys', secure.join("\n"))
 
 keys.map! do |key|
-encrypt key
+  encrypt key
 end
 p keys
-File.write((File.expand_path('config/.slacker', __dir__)), keys.join("\n"))
+File.write(File.expand_path('config/.slacker', __dir__), keys.join("\n"))
