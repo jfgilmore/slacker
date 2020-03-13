@@ -38,10 +38,12 @@ Or install it yourself as:
 
 1. Execute from the terminal the command: slacker
 2. Choose if you want to proceed with login (y/n then [ENTER])
-3. Select the #channel you want to post to or change mode to personal messages using the [UP] and [DOWN] arrows.
-4. Type your message into the terminal and hit enter to send. Your message will be posted to the selected #channel or direct message chat.
-5. Hit enter with no text input and you will return to the context menu
-6. Change modes or choose <Exit> to end your *slacker* session
+3. Select the #channel you want to post to or change mode to personal messages using the [UP] and [DOWN] arrows then hit [ENTER] to continue.
+4. Type your message into the terminal and hit [ENTER] to send. Your message will be posted to the selected #channel or direct message chat.
+5. Hit [ENTER] again with no text input and you will return to the context menu
+6. Change mode or conversation or choose <Exit> to end your *slacker* session
+
+[User flow UML diagram](https://www.lucidchart.com/documents/embeddedchart/07df6a7f-79ee-45af-8645-9377b7ee341e)
 
 If something goes wrong you'll generally be given an error code displayed on the screen to let you know what went wrong.
 
@@ -117,6 +119,9 @@ Tty-prompt helps avoid any syntax errors from the user typing the wrong thing at
 
 Future plans to add a chat history method within the main loop.
 
+## System Requirements.
+
+Should run on any modern computer (Over 1GHz processor, with 1 GB of RAM, uses aproximately 14MB of disk space), requires ruby to be installed as well as the bundler gem.
 
 ## Sources
 
@@ -134,9 +139,12 @@ Future plans to add a chat history method within the main loop.
 
 *Slacker* will be released as a ruby gem in future however at this point in time the application is not secure at the application or user level. There is currently a branch in the repo where full token and code encryption is being developed.
 
+## Project Management / Feature Requests
 ### Trello
 
 The project management side of thing goes on [here](https://trello.com/b/43fPLAbw/t1a2-terminal-project)
+
+Additional screenshots of earlier progress in the docs folder.
 
 ## Contributing
 

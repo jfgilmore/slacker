@@ -77,6 +77,7 @@ if quick
 else
   # Prompt user to sign in.
   prompt.yes?('Do you want to login to Slack?') ? slack = Slack.new : close
+  # need timout error handling :(
 end
 puts 'Login error, please try again' unless slack.login
 

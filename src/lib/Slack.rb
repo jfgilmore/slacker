@@ -15,8 +15,8 @@ class Slack
     @USER_SCOPE = true
     @SCOPE = 'channels:read,channels:history,groups:history,im:history,mpim:history,users:read,chat:write,'
     # users:read.email
-    @CLIENT_ID = '930069515525.977879044658'
-    @CLIENT_SECRET = 'dc968f10464c7bb39bd9c72ad2c599bb'
+    @CLIENT_ID = 
+    @CLIENT_SECRET = 
     @EXIT = { name: '<Exit>', value: false }
     @CHANNELS = { name: '#Channels', value: :ch }
     @PRIVATE_MSG = { name: '-Private messages', value: :pm }
