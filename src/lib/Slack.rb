@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This class handles all the interactions with slack and sends them to the LocalServe class via the Authenticator class.
+# The instance of this class in the main code allows communication with the Slack API by compiling application/x-www-form-urlencoded style http requests. The Authentication class returns the responses to these in a meaningful format to print to the terminal.
 class Slack
   require_relative 'authenticator'
   require 'httparty'

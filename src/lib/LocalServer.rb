@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# This class spins up servers temporarilly to retrieve requests from oauth sessions
+# It also handles post and get http requests with the HTTParty gem.
 class LocalServer
   require 'socket'
   require 'httparty'
