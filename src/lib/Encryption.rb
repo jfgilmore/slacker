@@ -2,7 +2,7 @@
 
 # The Encryption class handles all of the encryption and decryption of secret keys and tokens.
 # Idealy this service would be hosted remotely so the encryption and decryption keys are not accessible to an attaker.
-# 
+#
 class Encryption
   require 'encryptor'
   require 'securerandom'
