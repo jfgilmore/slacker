@@ -18,19 +18,13 @@ class Authenticator
   def initialize(url, redirect_uri, client_id, client_secret, scope, user_scope)
     # scope left as general
     @url = url
-    @user_scope = if user_scope
-                    'user_scope='
-                  else
-                    'scope='
-                  end
+    @user_scope = user_scope ? 'user_scope=' : 'scope='
     @scope = @user_scope + scope
     @redirect_uri = redirect_uri
     @server = LocalServer.new
-
     @user_id = ''
     @team = ''
     @team_name = ''
-
     # private
     @client_id = client_id
     @client_secret = client_secret

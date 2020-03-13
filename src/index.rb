@@ -1,7 +1,5 @@
 #!/Users/joshuagilmore/.rbenv/shims/ruby
-# frozen_string_literal: true
 
-`clear`
 quick = false
 require 'redcarpet'
 require 'redcarpet/render_strip'
@@ -26,7 +24,6 @@ if ARGV.include? 'man'
   puts markdown.render file
   exit
 end
-`clear`
 
 require 'rubygems'
 require 'bundler/setup'
@@ -47,19 +44,14 @@ require 'tty-prompt'
 require_relative 'lib/Slack'
 
 prompt = TTY::Prompt.new
-art = Artii::Base.new
+$art = Artii::Base.new
 
 # Print closing tag
-def close(art)
-  `clear`
+def close
   line
-  puts "Thanks for using______\n#{art.asciify('Slacker').colorize(:green)}"
+  puts "Thanks for using______\n#{$art.asciify('Slacker').colorize(:green)}"
   line
   exit
-end
-
-def input
-  gets.chomp
 end
 
 def line
@@ -67,9 +59,8 @@ def line
 end
 
 # Opening tag
-`clear`
 line
-puts art.asciify('Slacker').colorize(:green)
+puts $art.asciify('Slacker').colorize(:green)
 line
 
 # Check internet connection available
@@ -80,30 +71,30 @@ def online
 end
 
 online
-`clear`
 # If the quick login argument given, skip the login y/n prompt
 if quick
   slack = Slack.new
 else
   # Prompt user to sign in.
-  prompt.yes?('Do you want to login to Slack?') ? slack = Slack.new : close(art)
+  prompt.yes?('Do you want to login to Slack?') ? slack = Slack.new : close
 end
 puts 'Login error, please try again' unless slack.login
 
-previous = ''
+previous = :ch
+type = slack.channels
 loop do
-  while slack.conversation == :pm || slack.conversation == :ch ||
-        slack.conversation == false
-    slack.conversation = prompt.select 'Select a private message thread:', slack.users
+  while slack.conversation == :pm || slack.conversation == :ch || !slack.conversation
+    previous = slack.conversation
+    slack.conversation = prompt.select 'Select a private message thread:', type
     case slack.conversation
-    when :ch || ''
-      previous = :ch
+    when :ch
+      type = slack.channels
     when :pm
-      previous = :pm
+      type = slack.users
     when false
-      close art
+      close
     else
-      break
+      # break
     end
   end
 
@@ -115,12 +106,9 @@ loop do
   chat = true
   while chat
     print "#{slack.conversation_name}:"
-    msg = input
+    msg = gets.chomp
     chat = slack.message msg
     'Message undelivered: check your internet connection' unless chat == true
   end
   slack.conversation = previous
 end
-
-close(art)
-# session.message = prompt(session.conversations)
