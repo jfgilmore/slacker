@@ -15,12 +15,12 @@ class Authenticator
 
   attr_reader :team, :team_name, :user_id
 
-  def initialize(url, redirect_uri, client_id, client_secret, scope, user_scope)
+  def initialize( url, client_id, client_secret, scope, user_scope)
     # scope left as general
     @url = url
     @user_scope = user_scope ? 'user_scope=' : 'scope='
     @scope = @user_scope + scope
-    @redirect_uri = redirect_uri
+    @redirect_uri = 'http://localhost:3000/oauth2/callback'
     @server = LocalServer.new
     @user_id = ''
     @team = ''
