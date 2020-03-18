@@ -9,8 +9,7 @@ class Authenticator
   require 'cgi'
   require 'json'
   require 'httparty'
-  require 'encryptor'
-  require 'securerandom'
+  require_relative 'encryption'
   require_relative 'local_server'
 
   attr_reader :team, :team_name, :user_id
@@ -68,6 +67,14 @@ class Authenticator
   end
 
   private
+
+  def encrypt unencrypted_data
+    secure.encrypt unencrypted_data
+  end
+
+  def decrypt encrypted_data
+    secure.decrypt encrypted_data
+  end
 
   # Builds the client OAuth2 request to send to slack, request opens in browser
   def client
