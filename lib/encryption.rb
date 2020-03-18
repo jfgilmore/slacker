@@ -9,26 +9,24 @@ class Encryption
   require 'yaml'
 
   def initialize
-    x = 0
-    cipher = ''
-    secret_key = ''
-    iv = ''
-    keys = YAML.load_file(File.expand_path('config/.slacker.yml', __dir__))
-
-    if File.exist?(ENV['HOME'] + '/.slacker_keys.yml')
-      x = 0
-
-      secure = YAML.load_file(ENV['HOME'] + '/.slacker_keys.yml')
-      cipher = secure[:cipher]
-      secret_key = secure[:key]
-      iv = secure[:iv]
-
-      Encryptor.default_options.merge!(algorithm: 'aes-256-cbc', key: secret_key, iv: iv)
-      keys.each_pair { |key, value| keys[key] = decrypt value }
-    else
-      YAML.load_file(File.new(ENV['HOME'] + '/.slacker_keys.yml', 'w+'))
+    begin
+      keys = YAML.load_file(__dir__ + '/../.slacker.yml')
+      # raise Errno::ENOENT, "Missing or dammaged config file!\nAttempting to recover..." 
+    rescue Errno::ENOENT => e # Figure out error code for missing file!
+      # system('slacker -recover')
+      # retry
+      puts e.message
+      puts e.backtrace.inspect
+      puts 'Hit it!'
+      exit
     end
 
+    secure = YAML.load_file(__dir__ + '/../.slacker.yml')
+    secret_key = secure[:key]
+    iv = secure[:iv]
+
+    Encryptor.default_options.merge!( algorithm: 'aes-256-cbc', key: secret_key,
+                                      iv: iv)
     cipher = OpenSSL::Cipher.new('aes-256-gcm')
     # cipher.encrypt # Required before '#random_key' or '#random_iv' can be called. http://ruby-doc.org/stdlib-2.0.0/libdoc/openssl/rdoc/OpenSSL/Cipher.html#method-i-encrypt
 
@@ -42,12 +40,12 @@ class Encryption
 
     File.write(ENV['HOME'] + '/.slacker_keys.yml', secure.to_yaml)
 
-    keys.each_pair do |key, value|
-      p value
-      keys[key] = encrypt value
+    # keys.each_pair do |key, value|
+    #   p value
+    #   keys[key] = encrypt value
+    # end
 
-      File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
-    end
+      # File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
   end
 
   def decrypt(encrypted_value)
