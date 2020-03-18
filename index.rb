@@ -1,7 +1,7 @@
 #!/Users/gilmore/.rbenv/shims/ruby
 # frozen_string_literal=true
 
-system("clear")
+system('clear')
 # On first run generate config files and run bundle install
 unless File.exist? File.expand_path('config', __dir__)
   puts 'generating config files...'
@@ -47,7 +47,7 @@ require_relative 'lib/local_server'
 
 # Print closing tag
 def close
-  system("clear")
+  system('clear')
   line
   puts "Thanks for using______\n#{$art.asciify('Slacker').colorize(:green)}"
   line
@@ -88,9 +88,9 @@ type = slack.channels
 loop do
   while slack.conversation == :pm || slack.conversation == :ch ||
         !slack.conversation
-    system("clear")
+    system('clear')
     previous = slack.conversation
-    slack.conversation = prompt.select 'Select a message thread:', type
+    slack.conversation = prompt.select 'Select a conversation thread:', type, filter: true
     case slack.conversation
     when :ch
       type = slack.channels
