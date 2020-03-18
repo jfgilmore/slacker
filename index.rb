@@ -90,7 +90,7 @@ loop do
         !slack.conversation
     system("clear")
     previous = slack.conversation
-    slack.conversation = prompt.select 'Select a private message thread:', type
+    slack.conversation = prompt.select 'Select a message thread:', type
     case slack.conversation
     when :ch
       type = slack.channels
