@@ -14,15 +14,17 @@ class Slack
     @USER_SCOPE = true
     @SCOPE = 'channels:read,channels:history,groups:history,im:history,
               mpim:history,users:read,chat:write,'
-    # users:read.email
-    @CLIENT_ID = 
-    @CLIENT_SECRET = 
+
+    # Load encrypted keys from .config.yml
+    config = YAML.load_file(__dir__+ '/../.slacker.yml')
+    @CLIENT_ID = config[:CLIENT_ID]
+    @CLIENT_SECRET = config[:CLIENT_SECRET]
+
     @EXIT = { name: '<Exit>', value: false }
     @CHANNELS = { name: '#Channels', value: :ch }
     @PRIVATE_MSG = { name: '-Private messages', value: :pm }
 
-    @user = Authenticator.new @URL, @CLIENT_ID, @CLIENT_SECRET, @SCOPE,
-                              @USER_SCOPE
+    @user = Authenticator.new @URL, @CLIENT_ID, @CLIENT_SECRET, @SCOPE, @USER_SCOPE
     @conversation = :ch
     @conversation_name = ''
     @channels = []

@@ -46,6 +46,7 @@ class Authenticator
 
   def new_session
     if @token == ''
+      p token_client
       response = @server.post(token_client)
       response = JSON.parse response
       @token = response['authed_user']['access_token']
