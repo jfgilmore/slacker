@@ -37,22 +37,14 @@ class Slack
   end
 
   def login
-    if @user_id
-      @user.new_session
-    else
-      @user.authenticate.new_session
-    end
+    @user_id ? @user.new_session : @user.authenticate.new_session
     @user_id = @user.user_id
     @team = @user.team
     @team_name = @user.team_name
     @channels[0] = load_channels
     @users[0] = load_users
-    @channels.each do |hash|
-      @conversations << hash
-    end
-    @users.each do |hash|
-      @conversations << hash
-    end
+    @channels.each { |hash| @conversations << hash }
+    @users.each { |hash| @conversations << hash }
     self
   end
 
