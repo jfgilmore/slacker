@@ -29,6 +29,7 @@ class Authenticator
     @client_secret = client_secret
     @token = ''
     @code = ''
+    @secure = Encryption.new
   end
 
   # Opens a browser window for OAuth2 authentication in Slack.
