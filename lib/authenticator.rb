@@ -5,13 +5,13 @@
 # and post requests to the API adding the authorisation token as
 # they are passed.
 class Authenticator
-  require_relative 'LocalServer'
   require 'launchy'
   require 'cgi'
   require 'json'
   require 'httparty'
   require 'encryptor'
   require 'securerandom'
+  require_relative 'local_server'
 
   attr_reader :team, :team_name, :user_id
 
