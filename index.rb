@@ -15,6 +15,9 @@ quick = true if ARGV.include? '-q'
 if ARGV.include? '-uninstall'
   # remove application and encryption keys & secret codes
 end
+if ARGV.include? '-recover'
+  # reinstall from web to recover any missing files/credentials
+end
 if ARGV.include?('-v') || ARGV.include?('man')
   # show version
   file = File.read File.expand_path('README.md', __dir__)
