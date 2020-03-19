@@ -11,3 +11,7 @@ gem 'launchy', '~> 2.5'
 gem 'cgi', '~> 0.1.0'
 gem 'encryptor', '~> 3.0'
 gem 'redcarpet', '~> 3.5'
+
+group :development do
+    gem 'ruby-debug-ide'
+end

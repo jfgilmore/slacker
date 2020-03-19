@@ -1,0 +1,18 @@
+#<HTTParty::Response:0x16eb8 parsed_response={"ok"=>true, "channel"=>"DU91Y51QX", "ts"=>"15846003
+67.000500", "message"=>{"bot_id"=>"BV9NH3ECE", "type"=>"message", "text"=>"djsnldgndlasjnfdkjlsa"
+, "user"=>"UTUC87E3U", "ts"=>"1584600367.000500", "team"=>"TTC21F5FF", "bot_profile"=>{"id"=>"BV9
+NH3ECE", "deleted"=>false, "name"=>"slacker", "updated"=>1583933231, "app_id"=>"AURRV1AKC", "icon
+s"=>{"image_36"=>"https://a.slack-edge.com/80588/img/plugins/app/bot_36.png", "image_48"=>"https:
+//a.slack-edge.com/80588/img/plugins/app/bot_48.png", "image_72"=>"https://a.slack-edge.com/80588
+/img/plugins/app/service_72.png"}, "team_id"=>"TTC21F5FF"}}}, @response=#<Net::HTTPOK 200 OK read
+body=true>, @headers={"content-type"=>["application/json; charset=utf-8"], "content-length"=>["32
+3"], "connection"=>["close"], "date"=>["Thu, 19 Mar 2020 06:46:07 GMT"], "server"=>["Apache"], "x
+-slack-req-id"=>["4c5657bd5c547d3b50c0015bf7346838"], "x-oauth-scopes"=>["identify,channels:histo
+ry,groups:history,im:history,mpim:history,channels:read,users:read,users:read.email,chat:write"],
+ "x-accepted-oauth-scopes"=>["chat:write"], "access-control-expose-headers"=>["x-slack-req-id, re
+try-after"], "x-slack-backend"=>["h"], "x-content-type-options"=>["nosniff"], "expires"=>["Mon, 2
+6 Jul 1997 05:00:00 GMT"], "cache-control"=>["private, no-cache, no-store, must-revalidate"], "x-
+xss-protection"=>["0"], "vary"=>["Accept-Encoding"], "pragma"=>["no-cache"], "access-control-allo
+w-headers"=>["slack-route, x-slack-version-ts, x-b3-traceid, x-b3-spanid, x-b3-parentspanid, x-b3
+-sampled, x-b3-flags"], "strict-transport-security"=>["max-age=31536000; includeSubDomains; prelo
+ad"], "referrer-policy"=>["no-referrer"], "access-control-allow-origin"=>["*"], "x-via"=>["haproxy-www-4tm2"], "x-cache"=>["Miss from cloudfront"], "via"=>["1.1 7a7cbcc9a496cf341e54c90ad14e02d4.cloudfront.net (CloudFront)"], "x-amz-cf-pop"=>["SYD1-C1"], "x-amz-cf-id"=>["rt0zj19YSavm2NBSajVLTR5T_uF6VAZbz-VbWTg1INhJAAiqtefBIA=="]}>

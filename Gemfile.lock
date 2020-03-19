@@ -22,7 +22,10 @@ GEM
       equatable (~> 0.6)
       tty-color (~> 0.5)
     public_suffix (4.0.3)
+    rake (13.0.1)
     redcarpet (3.5.0)
+    ruby-debug-ide (0.7.0)
+      rake (>= 0.8.1)
     tty-color (0.5.1)
     tty-cursor (0.7.1)
     tty-prompt (0.21.0)
@@ -47,7 +50,8 @@ DEPENDENCIES
   httparty (~> 0.18.0)
   launchy (~> 2.5)
   redcarpet (~> 3.5)
+  ruby-debug-ide
   tty-prompt (~> 0.21.0)
 
 BUNDLED WITH
-   2.1.2
+   2.1.4
