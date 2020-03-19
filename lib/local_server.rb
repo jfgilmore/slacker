@@ -61,11 +61,12 @@ class LocalServer
   # Print html response to browser
   # Put template response page external to code
   def page(client)
+    file = File.read(__dir__ + '/../docs/' + 'login_response.html')
     client = client
     client.puts('HTTP/1.1 200 OK')
     client.puts('Content-Type: text/html; charset=UTF-8')
     client.puts('')
-    client.puts(__dir__ + '/../docs' + '.login_response.html')
+    client.puts(file.to_s)
     self
   end
 
@@ -75,12 +76,13 @@ class LocalServer
       tries = 0
       return tries
     when 404
-      puts "O noes not found!"
+      puts '404: Alright, we have a serious problem here!'
     when 500...600
-      puts "Somethings up with Slack, you may have to wait a while...\n#{response.code}"
+      puts 'Somethings up with Slack, you may have to wait a while...\n' +
+           response.code.to_s
       sleep(4)
     else
-      puts 'It appears, you are back in the stone age, check your net connection.'
+      puts 'It appears, we\'re in the stone age, check your internet connection'
       sleep(20)
     end
     # If repeated errors
@@ -89,7 +91,9 @@ class LocalServer
       sleep(3)
       puts 'Perhaps drop us a line? Let us know what\'s going wrong.'
       sleep(3)
-      mail_to 'djsounddog@gmail.com', "Slacker keep thowing an error: #{response.code}\n#{response.message}\n\nThanks, Concerned Individual", subject: "These errors are making me crazy"
+      mail_to 'djsounddog@gmail.com', 'Slacker keep thowing an error:' +
+              response.code.to_s + '\n' + response.message.to_s + '\n\nThanks,' +
+              'Concerned Individual', subject: 'These errors are making me crazy'
     else
       times
     end
