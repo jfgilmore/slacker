@@ -10,20 +10,15 @@ class Encryption
 
   def initialize
     begin
-      keys = YAML.load_file(__dir__ + '/../.slacker.yml')
-      # raise Errno::ENOENT, "Missing or dammaged config file!\nAttempting to recover..." 
-    rescue Errno::ENOENT => e # Figure out error code for missing file!
-      # system('slacker -recover')
-      # retry
-      puts e.message
-      puts e.backtrace.inspect
-      puts 'Hit it!'
-      exit
+      keys = YAML.load_file(__dir__ + '/../' + '.keys.yml')
+    rescue Errno::ENOENT
+      puts "Missing or dammaged config file!\nAttempting to recover..."
+      system('./index -recover')
+      retry
     end
 
-    secure = YAML.load_file(__dir__ + '/../.slacker.yml')
-    secret_key = secure[:key]
-    iv = secure[:iv]
+    secret_key = keys[:key]
+    iv = keys[:iv]
 
     Encryptor.default_options.merge!( algorithm: 'aes-256-cbc', key: secret_key,
                                       iv: iv)
@@ -45,7 +40,7 @@ class Encryption
     #   keys[key] = encrypt value
     # end
 
-      # File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
+    # File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
   end
 
   def decrypt(encrypted_value)
