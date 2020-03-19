@@ -2,10 +2,13 @@
 
 # require 'pry'
 require_relative 'authenticator'
-require 'httparty'
 
-# This class handles all the interactions with slack and sends them to the LocalServe class via the Authenticator class.
-# The instance of this class in the main code allows communication with the Slack API by compiling application/x-www-form-urlencoded style http requests. The Authentication class returns the responses to these in a meaningful format to print to the terminal.
+# This class handles all the interactions with slack and sends them to the
+# LocalServer class via the Authenticator class.
+# The instance of this class in the main code allows communication with the
+# Slack API by compiling application/x-www-form-urlencoded style http requests.
+# The Authentication class returns the responses to these in a meaningful format
+# to print to the terminal.
 class Slack
   attr_reader :conversation, :conversation_name, :channels, :users
 
@@ -16,16 +19,14 @@ class Slack
     @USER_SCOPE = true
     @SCOPE = 'channels:read,channels:history,groups:history,im:history,
               mpim:history,users:read,chat:write,'
-
+    # DUDE MAKE A HASH OUT OF ALL OF THESE INSTANCE VARIABLES... FREEZE IT IF YOU MUST BUT CLEAN UP THIS MESS!
     # Load encrypted keys from .config.yml
     config = YAML.load_file(__dir__ + '/../' + '.keys.yml')
     @CLIENT_ID = config[:CLIENT_ID]
     @CLIENT_SECRET = config[:CLIENT_SECRET]
-
     @EXIT = { name: '<Exit>', value: false }
     @CHANNELS = { name: '#Channels', value: :ch }
     @PRIVATE_MSG = { name: '-Private messages', value: :pm }
-
     @user = Authenticator.new @URL, @CLIENT_ID, @CLIENT_SECRET, @SCOPE, @USER_SCOPE
     @conversation = :ch
     @conversation_name = ''
@@ -52,13 +53,13 @@ class Slack
   end
 
   def message(text)
-    false unless text
+    return false if text == ''
 
-      payload = "#{@URL}api/chat.postMessage?channel=#{@conversation}&text=#{text}"
-      response = @user.post(payload)
-      response = JSON.parse(response.body)
-      print 'Message undelivered: check your internet connection' unless response['ok']
-      true
+    payload = "#{@URL}api/chat.postMessage?channel=#{@conversation}&text=#{text}"
+    response = @user.post(payload)
+    response = JSON.parse(response.body)
+    print 'Message undelivered: check your internet connection' unless response['ok']
+    true
   end
 
   # Message history: to be added in later revision.
