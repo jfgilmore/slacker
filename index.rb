@@ -1,5 +1,18 @@
 #!/Users/gilmore/.rbenv/shims/ruby
 # frozen_string_literal=true
+# require 'pry'
+require 'ruby-debug-ide'
+require 'bundler/setup'
+Bundler.require(:default, :development)
+require 'rubygems'
+require 'artii'
+require 'colorize'
+require 'colorized_string'
+require 'tty-prompt'
+require 'redcarpet'
+require 'redcarpet/render_strip'
+require_relative 'lib/slack'
+require_relative 'lib/local_server'
 
 system('clear')
 # On first run generate config files and run bundle install
@@ -36,18 +49,6 @@ if ARGV.include? 'man'
   exit
 end
 
-require 'bundler/setup'
-Bundler.require(:default)
-require 'rubygems'
-require 'artii'
-require 'colorize'
-require 'colorized_string'
-require 'tty-prompt'
-require 'redcarpet'
-require 'redcarpet/render_strip'
-require_relative 'lib/slack'
-require_relative 'lib/local_server'
-
 # Print closing tag
 def close
   system('clear')
@@ -74,6 +75,9 @@ def online
   check = LocalServer.new
   check.get 'https://google.com'
 end
+
+# start a REPL session
+# binding.pry
 
 online
 # If the quick login argument given, skip the login y/n prompt
