@@ -16,7 +16,7 @@ class Slack
               mpim:history,users:read,chat:write,'
 
     # Load encrypted keys from .config.yml
-    config = YAML.load_file(__dir__+ '/../.slacker.yml')
+    config = YAML.load_file(__dir__ + '/../' + '.keys.yml')
     @CLIENT_ID = config[:CLIENT_ID]
     @CLIENT_SECRET = config[:CLIENT_SECRET]
 
@@ -37,10 +37,15 @@ class Slack
   end
 
   def login
-    @user_id ? @user.new_session : @user.authenticate.new_session
-    @user_id = @user.user_id
-    @team = @user.team
-    @team_name = @user.team_name
+    @user_id ? response = @user.new_session : response = @user.authenticate.new_session
+    # @user_id = @user.user_id
+    # @team = @user.team
+    # @team_name = @user.team_name
+    p response
+    @user_id = response['authed_user']['id']
+    @team = response['team']['id']
+    @team_name = response['team']['name']
+
     @channels[0] = load_channels
     @users[0] = load_users
     @channels.each { |hash| @conversations << hash }
@@ -54,7 +59,7 @@ class Slack
     else
       payload = "#{@URL}api/chat.postMessage?channel=#{@conversation}&text=#{text}"
       response = @user.post(payload)
-      JSON.parse response
+      response ? JSON.parse(response) : puts('Message not sent!')
       true
     end
   end

@@ -12,18 +12,13 @@ class Authenticator
   require_relative 'encryption'
   require_relative 'local_server'
 
-  attr_reader :team, :team_name, :user_id
-
-  def initialize( url, client_id, client_secret, scope, user_scope)
+  def initialize(url, client_id, client_secret, scope, user_scope)
     # scope left as general
     @url = url
     @user_scope = user_scope ? 'user_scope=' : 'scope='
     @scope = @user_scope + scope
     @redirect_uri = 'http://localhost:3000/oauth2/callback'
     @server = LocalServer.new
-    @user_id = ''
-    @team = ''
-    @team_name = ''
     # private
     @client_id = client_id
     @client_secret = client_secret
@@ -46,13 +41,9 @@ class Authenticator
 
   def new_session
     if @token == ''
-      p token_client
       response = @server.post(token_client)
-      response = JSON.parse response
+      response = JSON.parse response.body
       @token = response['authed_user']['access_token']
-      @user_id = response['authed_user']['id']
-      @team = response['team']['id']
-      @team_name = response['team']['name']
     end
     self
   end
@@ -69,12 +60,25 @@ class Authenticator
 
   private
 
-  def encrypt unencrypted_data
+  def encrypt(unencrypted_data)
     secure.encrypt unencrypted_data
   end
 
-  def decrypt encrypted_data
+  def decrypt(encrypted_data)
     secure.decrypt encrypted_data
+  end
+
+  def validate
+    # Retrieve the X-Slack-Request-Timestamp header on the HTTP request,
+    # and the body of the request.
+    # Concatenate the version number, the timestamp,
+    # and the body of the request to form a basestring.
+    # Use a colon as the delimiter between the three elements.
+    # For example, v0:123456789:command=/weather&text=94070.
+    # The version number right now is always v0.
+    # With the help of HMAC SHA256 implemented in your favorite programming,
+    # hash the above basestring, using the Slack Signing Secret as the key.
+    # Compare this computed signature to the X-Slack-Signature header on the request.
   end
 
   # Builds the client OAuth2 request to send to slack, request opens in browser
