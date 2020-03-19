@@ -11,7 +11,10 @@ class LocalServer
 
   # Opens session in default browser
   def launch(url)
-    Launchy.open(url)
+    Launchy.open(url) do |exception|
+      puts "Attempted to open Slack for authentication and failed because:
+      #{exception}"
+    end
   end
 
   # Get response then close session
@@ -62,20 +65,7 @@ class LocalServer
     client.puts('HTTP/1.1 200 OK')
     client.puts('Content-Type: text/html; charset=UTF-8')
     client.puts('')
-    client.puts('<!DOCTYPE HTML>')
-    client.puts('<html>')
-    client.puts('<head onload="function()">')
-    client.puts('<title>slacker</title>')
-    client.puts('</head>')
-    client.puts('<body>')
-    client.puts('<h1>DONT PANIC: Return to your terminal session...</h1>')
-    client.puts('</body>')
-    client.puts('</html>')
-    client.puts("<script>
-                  function() {
-                  open(location, '_self').close();
-                  }, 5000);
-                </script>")
+    client.puts(__dir__ + '/../docs' + '.login_response.html')
     self
   end
 
