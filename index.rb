@@ -1,6 +1,7 @@
 #!/Users/gilmore/.rbenv/shims/ruby
-# frozen_string_literal=true
-# require 'pry'
+# frozen_string_literal:true
+
+require 'pry'
 require 'ruby-debug-ide'
 require 'bundler/setup'
 Bundler.require(:default, :development)
@@ -76,9 +77,6 @@ def online
   check.get 'https://google.com'
 end
 
-# start a REPL session
-# binding.pry
-
 online
 # If the quick login argument given, skip the login y/n prompt
 if quick
@@ -90,8 +88,10 @@ else
 end
 puts 'Login error, please try again' unless slack.login
 
+# Set app state
 previous = :ch
 type = slack.channels
+# Do main process
 loop do
   while slack.conversation == :pm || slack.conversation == :ch ||
         !slack.conversation
@@ -118,7 +118,6 @@ loop do
     print "#{slack.conversation_name}:"
     msg = gets.chomp
     chat = slack.message msg
-    'Message undelivered: check your internet connection' unless chat == true
   end
   slack.conversation = previous
 end
