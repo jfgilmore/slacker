@@ -29,12 +29,40 @@ class LocalServer
   end
 
   def post(url)
-    response = HTTParty.post(url)
-    puts 'Please check your internet connection' unless response.code == 200
-    response.body
+    timeout = 0.1
+    begin
+      puts timeout
+    response = HTTParty.post(url, timeout: timeout)
+    # unless response.code == 200
+    #   raise response, 'Problems with Slack.com try again later'
+    #   # Handle exceptions
+    #   # parsed_response
+    # end
+    # rescue => e
+    #   e.message
+    #   e.backtrace.inspect
+    #   if response.code == 400
+    #     puts 'Authentication failed, your session may have expired.'
+    #     puts 'Opening browser to reauthenticate...'
+        
+    #   end
+      # p JSON.parse(e.body)['parsed_response']
+    rescue Net::ReadTimeout
+      puts 'Your internet connection appears to be slow. Trying again...'
+      if timeout < 60
+        timeout += 20
+        retry
+      else
+        puts 'Check your internet connection before you retry.'
+        false
+      end
+    else
+      response
+    end
   end
 
   # Print html response to browser
+  # Put template response page external to code
   def page(client)
     client = client
     client.puts('HTTP/1.1 200 OK')
