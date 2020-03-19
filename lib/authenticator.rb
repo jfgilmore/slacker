@@ -5,10 +5,8 @@
 # and post requests to the API adding the authorisation token as
 # they are passed.
 class Authenticator
-  require 'launchy'
   require 'cgi'
   require 'json'
-  require 'httparty'
   require_relative 'encryption'
   require_relative 'local_server'
 
@@ -19,7 +17,7 @@ class Authenticator
     @scope = @user_scope + scope
     @redirect_uri = 'http://localhost:3000/oauth2/callback'
     @server = LocalServer.new
-    # private
+    private
     @client_id = client_id
     @client_secret = client_secret
     @token = ''
@@ -30,22 +28,21 @@ class Authenticator
   # Opens a browser window for OAuth2 authentication in Slack.
   # Needs error handling, returns encrypted user session key on success
   def authenticate
-    if @code == ''
-      Launchy.open(client)
-      getter = LocalServer.new
-      @code = CGI.parse getter.response
-      @code = @code['GET /oauth2/callback?code'][0]
-    end
+    return false unless @code
+    getter = LocalServer.new
+    getter.launch(client)
+    @code = CGI.parse getter.response
+    @code = @code['GET /oauth2/callback?code'][0]
     self
   end
 
   def new_session
-    if @token == ''
+    return false unless @token
+
       response = @server.post(token_client)
       response = JSON.parse response.body
       @token = response['authed_user']['access_token']
-    end
-    self
+      response
   end
 
   def get(url)
@@ -68,7 +65,10 @@ class Authenticator
     secure.decrypt encrypted_data
   end
 
-  def validate
+  def validate(response)
+    # do validation
+    CGI.parse response
+    true
     # Retrieve the X-Slack-Request-Timestamp header on the HTTP request,
     # and the body of the request.
     # Concatenate the version number, the timestamp,

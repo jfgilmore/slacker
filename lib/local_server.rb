@@ -3,10 +3,16 @@
 # This class spins up servers temporarilly to retrieve requests from oauth sessions
 # It also handles post and get http requests with the HTTParty gem.
 class LocalServer
+  require 'launchy'
   require 'socket'
   require 'httparty'
 
   def initialize; end
+
+  # Opens session in default browser
+  def launch(url)
+    Launchy.open(url)
+  end
 
   # Get response then close session
   # Spin up server on request
@@ -29,33 +35,21 @@ class LocalServer
   end
 
   def post(url)
-    timeout = 0.1
+    timeout = 20
     begin
-      puts timeout
-    response = HTTParty.post(url, timeout: timeout)
-    # unless response.code == 200
-    #   raise response, 'Problems with Slack.com try again later'
-    #   # Handle exceptions
-    #   # parsed_response
-    # end
-    # rescue => e
-    #   e.message
-    #   e.backtrace.inspect
-    #   if response.code == 400
-    #     puts 'Authentication failed, your session may have expired.'
-    #     puts 'Opening browser to reauthenticate...'
-        
-    #   end
-      # p JSON.parse(e.body)['parsed_response']
+      response = HTTParty.post(url, timeout: timeout)
     rescue Net::ReadTimeout
       puts 'Your internet connection appears to be slow. Trying again...'
-      if timeout < 60
+      if timeout < 40
         timeout += 20
         retry
       else
-        puts 'Check your internet connection before you retry.'
+        puts "It looks like you're having some connectivity isues 😞"
         false
       end
+    rescue SocketError
+      tries = handle_html_error(response, tries)
+      retry
     else
       response
     end
@@ -77,12 +71,38 @@ class LocalServer
     client.puts('<h1>DONT PANIC: Return to your terminal session...</h1>')
     client.puts('</body>')
     client.puts('</html>')
-    # client.puts("<script>
-    #               function() {
-    #               open(location, '_self').close();
-    #               }, 2000);
-    #             </script>")
+    client.puts("<script>
+                  function() {
+                  open(location, '_self').close();
+                  }, 5000);
+                </script>")
     self
+  end
+
+  def handle_html_error(response, tries)
+    case response.code
+    when 200
+      tries = 0
+      return tries
+    when 404
+      puts "O noes not found!"
+    when 500...600
+      puts "Somethings up with Slack, you may have to wait a while...\n#{response.code}"
+      sleep(4)
+    else
+      puts 'It appears, you are back in the stone age, check your net connection.'
+      sleep(20)
+    end
+    # If repeated errors
+    if tries == 3
+      puts "It's just not your day, try again sometime later."
+      sleep(3)
+      puts 'Perhaps drop us a line? Let us know what\'s going wrong.'
+      sleep(3)
+      mail_to 'djsounddog@gmail.com', "Slacker keep thowing an error: #{response.code}\n#{response.message}\n\nThanks, Concerned Individual", subject: "These errors are making me crazy"
+    else
+      times
+    end
   end
 end
 
