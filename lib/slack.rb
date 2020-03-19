@@ -40,6 +40,7 @@ class Slack
   def login
     @user_id ? response = @user.new_session : response = @user.authenticate.new_session
     return false unless response
+
     @user_id = response['authed_user']['id']
     @team = response['team']['id']
     @team_name = response['team']['name']
@@ -51,15 +52,13 @@ class Slack
   end
 
   def message(text)
-    if text == ''
-      false
-    else
+    false unless text
+
       payload = "#{@URL}api/chat.postMessage?channel=#{@conversation}&text=#{text}"
       response = @user.post(payload)
       response = JSON.parse(response.body)
       print 'Message undelivered: check your internet connection' unless response['ok']
       true
-    end
   end
 
   # Message history: to be added in later revision.
