@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+
+# require 'pry'
 require_relative 'authenticator'
 require 'httparty'
 
@@ -33,19 +35,14 @@ class Slack
     @message = ''
     # @state = Change to random code to be passed back by slack to authenticate
     # response, later revision to increase security
-    self
   end
 
   def login
     @user_id ? response = @user.new_session : response = @user.authenticate.new_session
-    # @user_id = @user.user_id
-    # @team = @user.team
-    # @team_name = @user.team_name
-    p response
+    return false unless response
     @user_id = response['authed_user']['id']
     @team = response['team']['id']
     @team_name = response['team']['name']
-
     @channels[0] = load_channels
     @users[0] = load_users
     @channels.each { |hash| @conversations << hash }
@@ -59,7 +56,8 @@ class Slack
     else
       payload = "#{@URL}api/chat.postMessage?channel=#{@conversation}&text=#{text}"
       response = @user.post(payload)
-      response ? JSON.parse(response) : puts('Message not sent!')
+      response = JSON.parse(response.body)
+      print 'Message undelivered: check your internet connection' unless response['ok']
       true
     end
   end
@@ -113,6 +111,5 @@ class Slack
         @conversation = id
       end
     end
-    self
   end
 end
