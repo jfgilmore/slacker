@@ -1,5 +1,5 @@
 # slacker
-Ever wanted to be slacker than **Slack**? Well now you can. *Slacker* allows you to post to your slack channels or contacts without leaving the terminal.
+Ever wanted to be slacker on **Slack**? Well now you can. *slacker* allows you to post to your slack channels or contacts without leaving the terminal.
 
 Many of us use slack for personal or organisational communication, but as developers we sometimes loathe to go outside the comfort of our terminal. I remember hearing that you can do pretty much everything from the terminal. However it's not always efficient or simple. So rather than using *curl* to send something to slack I conceived a simpler method without a lot of verbose arguments. This app is clearly meant for the developers among us however will feel natural to use even for those unfamiliar with the command line interface.
 
@@ -43,9 +43,8 @@ Or install it yourself as:
 5. Hit [ENTER] again with no text input and you will return to the context menu
 6. Change mode or conversation or choose <Exit> to end your *slacker* session
 
-[User flow UML diagram](https://www.lucidchart.com/documents/embeddedchart/07df6a7f-79ee-45af-8645-9377b7ee341e)
-
 If something goes wrong you'll generally be given an error code displayed on the screen to let you know what went wrong.
+It'll prompt you to send us an email if the s#@t hits the fan.
 
 ### Terminal arguments
 -q is quick login mode, skips the login prompt and goes straight to authentication
@@ -143,8 +142,6 @@ Should run on any modern computer (Over 1GHz processor, with 1 GB of RAM, uses a
 ### Trello
 
 The project management side of thing goes on [here](https://trello.com/b/43fPLAbw/t1a2-terminal-project)
-
-Additional screenshots of earlier progress in the docs folder.
 
 ## Contributing
 
