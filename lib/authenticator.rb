@@ -17,7 +17,7 @@ class Authenticator
     @scope = @user_scope + scope
     @redirect_uri = 'http://localhost:3000/oauth2/callback'
     @server = LocalServer.new
-    private
+    # private
     @client_id = client_id
     @client_secret = client_secret
     @token = ''
