@@ -2,6 +2,8 @@
 # frozen_string_literal:true
 
 require 'pry'
+require 'pry-remote'
+require 'pry-nav'
 require 'ruby-debug-ide'
 require 'bundler/setup'
 Bundler.require(:default, :development)

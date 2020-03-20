@@ -14,4 +14,7 @@ gem 'redcarpet', '~> 3.5'
 
 group :development do
     gem 'ruby-debug-ide'
+    gem 'pry'
+    gem 'pry-remote'
+    gem 'pry-nav'
 end

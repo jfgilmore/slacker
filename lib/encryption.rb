@@ -43,6 +43,10 @@ class Encryption
     # File.write(File.expand_path('config/.slacker.yml', __dir__), keys.to_yaml)
   end
 
+  def state
+    SecureRandom.alphanumeric(16)
+  end
+
   def decrypt(encrypted_value)
     Encryptor.decrypt(value: encrypted_value)
   end

@@ -17,8 +17,7 @@ class Slack
     @SLACK_URI = 'slack.com/'
     @URL = @URI_HEAD + @SLACK_URI
     @USER_SCOPE = true
-    @SCOPE = 'channels:read,channels:history,groups:history,im:history,
-              mpim:history,users:read,chat:write,'
+    @SCOPE = 'channels:read,channels:history,groups:history,im:history,mpim:history,users:read,chat:write,'
     # DUDE MAKE A HASH OUT OF ALL OF THESE INSTANCE VARIABLES... FREEZE IT IF YOU MUST BUT CLEAN UP THIS MESS!
     # Load encrypted keys from .config.yml
     config = YAML.load_file(__dir__ + '/../' + '.keys.yml')

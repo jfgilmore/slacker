@@ -22,6 +22,7 @@ class Authenticator
     @client_secret = client_secret
     @token = ''
     @code = ''
+    @state = ''
     @secure = Encryption.new
   end
 
@@ -32,26 +33,28 @@ class Authenticator
     getter = LocalServer.new
     getter.launch(client)
     @code = CGI.parse getter.response
+    binding.pry
+    state = @code['state'][0].to_s.slice(0..(@code['state'].to_s.index(' ') - 3)).strip
+    return false unless state == @state
     @code = @code['GET /oauth2/callback?code'][0]
     self
   end
 
   def new_session
     return false unless @token
-
-      response = @server.post(token_client)
-      response = JSON.parse response.body
-      @token = response['authed_user']['access_token']
-      response
+    response = @server.post(token_client)
+    response = JSON.parse response.body
+    @token = response['authed_user']['access_token'] # To be encrypted
+    response
   end
 
   def get(url)
-    payload = url + "&token=#{@token}"
+    payload = url + "&token=#{@token}" # Decrypt on way out
     @server.get(payload)
   end
 
   def post(url)
-    payload = url + "&token=#{@token}"
+    payload = url + "&token=#{@token}" # Decrypt on way out
     @server.post(payload)
   end
 
@@ -81,12 +84,16 @@ class Authenticator
     # Compare this computed signature to the X-Slack-Signature header on the request.
   end
 
+  def state
+    @state = @secure.state.to_s
+  end
+
   # Builds the client OAuth2 request to send to slack, request opens in browser
   def client
-    "#{@url}oauth/v2/authorize?#{@scope}&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}"
+    "#{@url}oauth/v2/authorize?#{@scope}&client_id=#{@client_id}&redirect_uri=#{@redirect_uri}&state=#{self.state}"
   end
 
   def token_client
-    "#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}"
+    "#{@url}api/oauth.v2.access?client_id=#{@client_id}&client_secret=#{@client_secret}&code=#{@code}&redirect_uri=#{@redirect_uri}&state=#{self.state}"
   end
 end
